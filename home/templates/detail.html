@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+</head>
+<body>
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-primary container" role="alert">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% block content %}
+<div class="container" enctype="multipart/form-data"><br>
+    <h2>{{item.content}}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-outline-info" type="submit">Update</button>
+    </form>
+    Posted On : {{ item.created_date| date:"d F Y"}}<br>
+    Posted By : <a href="#"><strong>{{ item.author }}</strong></a>
+</div>
+
+{% endblock %}
+
+</body>
+</html>

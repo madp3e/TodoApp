@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-primary container" role="alert">
+  {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+
+<table class="table container">
+  <thead>
+    <tr>
+      <th scope="col">List Number</th>
+      <th scope="col">Content</th>
+      <th scope="col">Status</th>
+      <th scope="col">Change Status</th>
+      <th scope="col">Delete</th>
+    </tr>
+      </thead>
+  <tbody>
+{% if all_list %}
+{% for list in all_list %}
+      <th scope="row">{{ forloop.counter }}</th>
+    {% if list.completed == False %}
+      <td><a style="color:red;" href="{% url 'detail' list.pk %}">{{ list.content }}</a></td>
+      <td><font color="red">Not yet done</font></td>
+    {% else %}
+      <td><font color="blue"><a href="{% url 'detail' list.pk %}">{{ list.content }}</a></font></td>
+      <td><font color="blue">DONE!</font></td>
+    {% endif %}
+      <td>
+          <!-- Example single danger button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Update status
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{% url 'complete' list.pk %}">Done</a>
+                <a class="dropdown-item" href="{% url 'uncomplete' list.pk %}">Undone</a>
+            </div>
+            </div>
+      </td>
+        <td>
+        <a href="{% url 'delete' list.pk %}">
+        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#exampleModal">
+         Delete?
+        </button>
+        </a>
+       </td>
+    </tr>
+{% endfor %}
+{% endif %}
+  </tbody>
+
+</table>
+
+{% endblock %}
