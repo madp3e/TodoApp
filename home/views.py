@@ -62,11 +62,13 @@ def detail(request, pk):
         form = UpdateDetailForm()
         return render(request, "detail.html", {"form": form, "item": item})
 
+@login_required()
 def false_list(request):
     lists = List.objects.filter(author=request.user, completed=False)
     print(lists)
     return render(request, "falselist.html", {"lists": lists})
 
+@login_required()
 def done_list(request):
     lists = List.objects.filter(author=request.user, completed=True)
     print(lists)
@@ -83,6 +85,7 @@ def register(request):
         form = UserRegistrationForm
     return render(request, "register.html", {"form": form})
 
+@login_required()
 def profile(request):
     if request.method == "POST":
         u_form = UpdateUserForm(request.POST, instance=request.user)
