@@ -7,6 +7,16 @@
     <title>Login</title>
 </head>
 <body>
+{% if user.is_created %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-info">
+    {{message}}
+</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+
 {% block content %}
 <div class="content-section container">
     <form method="POST">

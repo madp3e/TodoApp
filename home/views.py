@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import List
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import UserRegistrationForm, UpdateDetailForm, UpdateProfileForm, UpdateUserForm
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 
+from .forms import UserRegistrationForm, UpdateDetailForm, UpdateProfileForm, UpdateUserForm
+from .models import List
 
 # Create your views here.
 
@@ -78,9 +81,22 @@ def register(request):
     if request.method == "POST":
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Your account has been create!")
-            return redirect("login")
+            user = form.save(commit=False)
+            user.email = form.cleaned_data["email"]
+            if not User.objects.filter(email=user.email).exists():
+                messages.info(request, "Account successfully created")
+                send_mail(
+                    'WELCOME TO TODOAPP',
+                    'Hi, you have successfully registered with TODOAPP.',
+                    settings.EMAIL_HOST_USER,
+                    [user.email],
+                    fail_silently=False,
+                )
+                user.save()
+                return redirect("login")
+            else:
+                messages.info(request, "The email is already in used")
+                return render(request, "register.html", {"form": form})
     else:
         form = UserRegistrationForm
     return render(request, "register.html", {"form": form})
